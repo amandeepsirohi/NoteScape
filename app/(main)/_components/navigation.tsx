@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { ChevronLastIcon, ChevronsLeft, MenuIcon } from "lucide-react";
 import { isResSent } from "next/dist/shared/lib/utils";
 import { usePathname } from "next/navigation";
-import { ElementRef, useRef, useState } from "react";
+import { ElementRef, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 
 export const Navigation = () => {
@@ -16,6 +16,20 @@ export const Navigation = () => {
   const navbarRef = useRef<ElementRef<"div">>(null);
   const [isResetting, setIsResetting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
+
+  useEffect(() => {
+    if (isMobile) {
+      collapse();
+    } else {
+      resetWidth();
+    }
+  }, [isMobile]);
+
+  useEffect(() => {
+    if (isMobile) {
+      collapse();
+    }
+  }, [pathname, isMobile]);
 
   const handleMouseDown = (
     event: React.MouseEvent<HTMLDListElement, MouseEvent>
@@ -34,6 +48,7 @@ export const Navigation = () => {
 
     if (newWidth < 240) newWidth = 240;
     if (newWidth > 480) newWidth = 480;
+
     if (sidebarRef.current && navbarRef.current) {
       sidebarRef.current.style.width = `${newWidth}px`;
       navbarRef.current.style.setProperty("left", `${newWidth}px`);
