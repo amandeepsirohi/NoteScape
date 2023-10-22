@@ -50,7 +50,7 @@ export const UserItem = () => {
               </Avatar>
             </div>
             <div className="space-y-1">
-                <i>{user?.fullName}&apos;s NoteScape</i>
+                <p className="text-sm line-clamp-1">{user?.fullName}&apos;s NoteScape</p>
             </div>
           </div>
         </div>

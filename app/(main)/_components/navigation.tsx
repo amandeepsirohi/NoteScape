@@ -1,16 +1,30 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { ChevronLastIcon, ChevronsLeft, MenuIcon } from "lucide-react";
+import {
+  ChevronLastIcon,
+  ChevronsLeft,
+  MenuIcon,
+  PlusCircle,
+  Search,
+  Settings,
+} from "lucide-react";
 import { isResSent } from "next/dist/shared/lib/utils";
 import { usePathname } from "next/navigation";
 import { ElementRef, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
-import { UserItem } from './user-item';
+import { UserItem } from "./user-item";
+import { useMutation, useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { Item } from './item';
+import { toast } from "sonner";
 
 export const Navigation = () => {
   const pathname = usePathname();
   const isMobile = useMediaQuery("(max-width:768px)");
+
+  const documents = useQuery(api.documents.get);
+  const create = useMutation(api.documents.create);
 
   const isResizingRef = useRef(false);
   const sidebarRef = useRef<ElementRef<"aside">>(null);
@@ -93,6 +107,15 @@ export const Navigation = () => {
     }
   };
 
+  const handleCreate = () => {
+    const promise = create({title:"Untitled"});
+    toast.promise(promise , {
+      loading:'Creating new note',
+      success:'New note created',
+      error:'Failed to create note'
+    })
+  }
+
   return (
     <>
       <aside
@@ -112,10 +135,22 @@ export const Navigation = () => {
           <ChevronsLeft className="h-6 w-6" />
         </div>
         <div>
-          <UserItem/>
+          <UserItem />
+          <Item 
+          label="Search"
+          icon={Search}
+          isSearch
+          onClick={() => {}}/>
+          <Item 
+          label="Settings"
+          icon={Settings}
+          onClick={() => {}}/>
+          <Item onClick={handleCreate} label="New page" icon={PlusCircle} />
         </div>
         <div className="mt-4">
-          <p>documents</p>
+          {documents?.map((document) => (
+            <p key={document._id}>{document.title}</p>
+          ))}
         </div>
         <div
           onMouseDown={handleMouseDown}
