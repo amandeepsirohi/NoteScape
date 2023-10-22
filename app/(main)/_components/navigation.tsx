@@ -22,6 +22,7 @@ import { Item } from "./item";
 import { toast } from "sonner";
 import { DocumentList } from './document-list';
 import { PopoverContent ,Popover, PopoverTrigger } from "@/components/ui/popover";
+import { TrashBox } from './trash-box';
 
 
 export const Navigation = () => {
@@ -155,7 +156,7 @@ export const Navigation = () => {
             <PopoverContent 
             className="p-0 w-72"
             side={isMobile?"bottom":"right"}>
-                <p>Trash Box</p>
+                <TrashBox/>
             </PopoverContent>
           </PopoverTrigger>
         </Popover>
