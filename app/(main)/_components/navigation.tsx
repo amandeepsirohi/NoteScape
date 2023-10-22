@@ -14,7 +14,7 @@ import {
 import { isResSent } from "next/dist/shared/lib/utils";
 import { useSearch } from "@/hooks/use-search";
 import { useSettings } from "@/hooks/use-settings";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { ElementRef, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { UserItem } from "./user-item";
@@ -25,9 +25,11 @@ import { toast } from "sonner";
 import { DocumentList } from './document-list';
 import { PopoverContent ,Popover, PopoverTrigger } from "@/components/ui/popover";
 import { TrashBox } from './trash-box';
+import { Navbar } from "./navbar";
 
 
 export const Navigation = () => {
+  const params = useParams();
   const settings = useSettings();
   const search = useSearch();
   const pathname = usePathname();
@@ -178,7 +180,13 @@ export const Navigation = () => {
           isResetting && "transition-all ease-in-out duration-300",
           isMobile && "left-0 w-full"
         )}>
-        <nav className="bg-transparent px-3 py-2 w-full">
+          {!!params.documentId ? (
+            <Navbar
+            isCollapsed={isCollapsed}
+            onResetWidth={resetWidth}
+            />
+          ):(
+            <nav className="bg-transparent px-3 py-2 w-full">
           {isCollapsed && (
             <MenuIcon
               onClick={resetWidth}
@@ -187,6 +195,8 @@ export const Navigation = () => {
             />
           )}
         </nav>
+          )}
+        
       </div>
     </>
   );
