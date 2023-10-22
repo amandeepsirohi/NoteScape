@@ -12,6 +12,7 @@ import {
   Trash,
 } from "lucide-react";
 import { isResSent } from "next/dist/shared/lib/utils";
+import { useSearch } from "@/hooks/use-search";
 import { usePathname } from "next/navigation";
 import { ElementRef, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
@@ -26,6 +27,7 @@ import { TrashBox } from './trash-box';
 
 
 export const Navigation = () => {
+  const search = useSearch();
   const pathname = usePathname();
   const isMobile = useMediaQuery("(max-width:768px)");
 
@@ -141,7 +143,7 @@ export const Navigation = () => {
         </div>
         <div>
           <UserItem />
-          <Item label="Search" icon={Search} isSearch onClick={() => {}} />
+          <Item label="Search" icon={Search} isSearch onClick={search.onOpen} />
           <Item label="Settings" icon={Settings} onClick={() => {}} />
           <Item onClick={handleCreate} label="New page" icon={PlusCircle} />
         </div>

@@ -159,7 +159,7 @@ export const restore = mutation({
         options.parentDocument = undefined;
       }
     }
-  const document =   await ctx.db.patch(args.id, options);
+    const document = await ctx.db.patch(args.id, options);
 
     recursiveRestore(args.id);
 
@@ -178,16 +178,33 @@ export const remove = mutation({
 
     const existingDocument = await ctx.db.get(args.id);
 
-    if(!existingDocument)
-    {
+    if (!existingDocument) {
       throw new Error("No docs found");
     }
-    if(existingDocument.userId !== userId)
-    {
-      throw new Error ("Unauthorized Action");
+    if (existingDocument.userId !== userId) {
+      throw new Error("Unauthorized Action");
     }
 
     const document = await ctx.db.delete(args.id);
     return document;
+  },
+});
+
+export const getSearch = query({
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not Authenticated");
+    }
+    const userId = identity.subject;
+
+    const documents = await ctx.db
+      .query("documents")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .filter((q) => q.eq(q.field("isArchived"), false))
+      .order("desc")
+      .collect();
+
+      return documents;
   },
 });
