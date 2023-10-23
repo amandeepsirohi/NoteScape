@@ -14,7 +14,7 @@ import {
 import { isResSent } from "next/dist/shared/lib/utils";
 import { useSearch } from "@/hooks/use-search";
 import { useSettings } from "@/hooks/use-settings";
-import { useParams, usePathname } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { ElementRef, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { UserItem } from "./user-item";
@@ -29,6 +29,7 @@ import { Navbar } from "./navbar";
 
 
 export const Navigation = () => {
+  const router = useRouter();
   const params = useParams();
   const settings = useSettings();
   const search = useSearch();
@@ -119,7 +120,8 @@ export const Navigation = () => {
   };
 
   const handleCreate = () => {
-    const promise = create({ title: "Untitled" });
+    const promise = create({ title: "Untitled" })
+    .then((documentId) => router.push(`/documents/${documentId}`))
     toast.promise(promise, {
       loading: "Creating new note",
       success: "New note created",
